@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const authRouter = require('./routes/authRoutes');
 const cookiesParser = require('cookie-parser');
+const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
 
@@ -17,9 +18,8 @@ app.use(cookiesParser());
 app.use(express.json());
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(passport.initialize());
 // ROUTES
-app.use('/api/products', productRouter);
+// app.use('/api/products', productRouter);
 
 app.all('/*splat', (req, res, next) => {
     next(new AppError(`This route ${req.originalUrl} is not yet defined!`, 404));

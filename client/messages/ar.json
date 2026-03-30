@@ -1,0 +1,170 @@
+{
+  "HomePage": {
+    "title": "مرحبا بالعالم",
+    "about": "اذهب إلى صفحة حول",
+    "heroHeading": "المنصة التي تربط المصورين بالتجار وشركات التسويق",
+    "heroParagraph": "انضم الآن إلى أكبر مجتمع من المصورين والمودلز وابدأ التعاون مع التجار والعلامات التجارية لتوسيع عملك الإبداعي",
+    "clientCta": "سجّل كعميل",
+    "providerCta": "سجّل كمقدّم خدمة",
+    "photographyLabel": "التصوير"
+  },
+  "Auth": {
+    "Signin": {
+      "title": "تسجيل الدخول",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "password": "كلمة المرور",
+      "forgot": "نسيت كلمة المرور؟",
+      "submit": "تسجيل الدخول",
+      "noAccount": "ليس لديك حساب؟",
+      "signup": "إنشاء حساب",
+      "welcome": "سعيدون بعودتك إلى تصويرة لتواصل الإبداع معا."
+    },
+    "Signup": {
+      "title": "إنشاء حساب",
+      "name": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "country": "الدولة",
+      "city": "المدينة",
+      "password": "كلمة المرور",
+      "submit": "إنشاء حساب",
+      "haveAccount": "لديك حساب بالفعل؟",
+      "signin": "تسجيل الدخول",
+      "experience": "سنوات الخبرة"
+    },
+    "ForgotPassword": {
+      "Step1": {
+        "title": "نسيت كلمة المرور؟",
+        "subtitle": "أدخل رقم الهاتف لإعادة تعيين كلمة المرور.",
+        "phone": "رقم الهاتف",
+        "submit": "ارسل",
+        "backToSignin": "العودة إلى تسجيل الدخول"
+      },
+      "Step2": {
+        "title": "كود التفعيل",
+        "subtitle": "تم ارسال كود تفعيل الحساب على رقم الهاتف",
+        "resend": "اعادة الارسال",
+        "expires": "ستنتهي صلاحية الكود بعد",
+        "submit": "ارسال"
+      },
+      "Step3": {
+        "title": "كلمة المرور الجديدة",
+        "subtitle": "قم بتحديث كلمة المرور الخاصة بك.",
+        "newPassword": "كلمة المرور الجديدة",
+        "confirmPassword": "تأكيد كلمة المرور الجديدة",
+        "submit": "تأكيد"
+      }
+    }
+  },
+  "Header": {
+    "home": "الرئيسية",
+    "categories": "الأقسام",
+    "bookings": "الحجوزات",
+    "profile": "البروفايل",
+    "dashboard": "الرئيسية",
+    "myServices": "خدماتي",
+    "searchPlaceholder": "بحث",
+    "notifications": "الإشعارات"
+  },
+  "UserHome": {
+    "categories": "الأقسام",
+    "best-photographers": "أفضل المصورين",
+    "years-experience": "سنوات الخبرة",
+    "show-profile": "عرض الملف الشخصي",
+    "show-more": "عرض المزيد",
+    "story": "ستوري",
+    "all-stories": "جميع القصص",
+    "previous": "السابق",
+    "next": "التالي"
+  },
+  "Stories": {
+    "close": "إغلاق",
+    "next-story": "القصة التالية",
+    "previous-story": "القصة السابقة"
+  },
+  "Footer": {
+    "what-looking": "ما الذى تبحث عنة؟",
+    "search": "بحث",
+    "imortant": "روابط مهمة",
+    "customer-service": "خدمة العملاء",
+    "download-app": "حمل تطبيق تصويرة الآن",
+    "app-available": "متوفر على جميع الأجهزة لتسهيل إدارة الإعاشة في أي وقت ومن أي مكان.",
+    "contact-now": "تواصل معنا الآن",
+    "submit-complaint": "تقديم شكوي",
+    "contact": "تواصل معنا",
+    "policy": "سياسة الخصوصية",
+    "terms": "الشروط والاحكام"
+  },
+  "Bookings": {
+    "orders": "الطلبات",
+    "waiting": "الانتظار",
+    "completed": "منتهية",
+    "cancelled": "ملغية",
+    "date-time": "التاريخ والوقت",
+    "price": "السعر",
+    "session-details": "تفاصيل الجلسة",
+    "booking-info": "معلومات الحجز",
+    "booking-details": "تفاصيل الحجز",
+    "order-id": "رقم الطلب",
+    "booking-date": "تاريخ الحجز",
+    "booking-time": "وقت الحجز",
+    "duration": "المدة",
+    "minutes": "دقيقة",
+    "pay-details": "تفاصيل الدفع",
+    "pay-method": "طريقة الدفع",
+    "total": "المبلغ الاجمالي",
+    "photographer-info": "معلومات المصور",
+    "cancel-booking": "الغاء الحجز",
+    "back": "رجوع",
+    "no-orders": "لا يوجد طلبات!",
+    "back-description": "قم باستعراض الرئيسية واختار الخدمة التي تناسبك او التي تطلبها عزيزنا المستخدم باستعراض طلباتك",
+    "go-home": "الذهاب للصفحة الرئيسية"
+  },
+  "ArtistHome": {
+    "story": "ستوري",
+    "show-more": "عرض المزيد",
+    "you": "أنت",
+    "upload-story": "رفع قصة",
+    "upload-story-description": "اختر صورة أو فيديو لمشاركته كقصة",
+    "upload": "رفع",
+    "loading": "جاري التحميل...",
+    "previous": "السابق",
+    "next": "التالي",
+    "welcome-greeting": "اهلا {name}",
+    "add-skills": "اضافة مهاراتك",
+    "select-skills": "قم باختيار مهاراتك",
+    "save": "حفظ",
+    "monthly": "شهريا",
+    "check-achievements": "دعنا نتحقق من انجازاتك المالية",
+    "orders-completed-today": "طلبات التي تمت اليوم",
+    "photography-inputs": "مدخلات التصوير"
+  },
+  "MyServices": {
+    "all-services": "جميع الخدمات",
+    "add-another-service": "اضافة خدمة اخري",
+    "view-service": "عرض الخدمة",
+    "delete-service": "حذف الخدمة",
+    "request": "طلب",
+    "currency": "إ.ل",
+    "add-new-service": "اضافة خدمة جديدة",
+    "service-name": "اسم الخدمة",
+    "service-name-placeholder": "قم بأدخال اسم الخدمة",
+    "service-price": "سعر الخدمة",
+    "service-price-placeholder": "قم بأدخال سعر الخدمة",
+    "service-notes": "ملاحظات للخدمة",
+    "service-notes-placeholder": "قم بأدخال ملاحظات للخدمة .......",
+    "add-service-image": "اضافة صورة للخدمة",
+    "attach-file": "قم بارفاق الملف",
+    "save": "حفظ",
+    "service-details": "تفاصيل الخدمة",
+    "service-requests": "طلبات الخدمة",
+    "service-chats": "محادثات الخدمة",
+    "edit-service": "تعديل الخدمة",
+    "update": "تحديث",
+    "booking-date": "تاريخ موعد الحجز",
+    "request-date-time": "التاريخ ووقت الطلب",
+    "no-bookings": "لا توجد طلبات",
+    "no-chats": "لا توجد محادثات"
+  }
+}

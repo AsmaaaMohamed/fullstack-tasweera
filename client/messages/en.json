@@ -1,0 +1,170 @@
+{
+  "HomePage": {
+    "title": "Hello world!",
+    "about": "Go to the about page",
+    "heroHeading": "The platform that connects photographers with merchants and marketing companies",
+    "heroParagraph": "Join now the largest community of photographers and models and start collaborating with merchants and brands to expand your creative business",
+    "clientCta": "Register as a client",
+    "providerCta": "Register as a provider",
+    "photographyLabel": "photography"
+  },
+  "Auth": {
+    "Signin": {
+      "title": "Sign in",
+      "email": "Email",
+      "phone": "Phone number",
+      "password": "Password",
+      "forgot": "Forgot password?",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "signup": "Sign up",
+      "welcome": "Welcome back to Taswera, let's create something amazing together."
+    },
+    "Signup": {
+      "title": "Sign up",
+      "name": "Full name",
+      "email": "Email",
+      "phone": "Phone number",
+      "country": "Country",
+      "city": "City",
+      "password": "Password",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "signin": "Sign in",
+      "experience": "Years of Experience"
+    },
+    "ForgotPassword": {
+      "Step1": {
+        "title": "Forgot password?",
+        "subtitle": "Enter phone number to reset password.",
+        "phone": "Phone number",
+        "submit": "Send",
+        "backToSignin": "Back to sign in"
+      },
+      "Step2": {
+        "title": "Activation Code",
+        "subtitle": "An account activation code has been sent to the phone number",
+        "resend": "Resend",
+        "expires": "The code will expire after",
+        "submit": "Send"
+      },
+      "Step3": {
+        "title": "New Password",
+        "subtitle": "Update your password.",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm New Password",
+        "submit": "Confirm"
+      }
+    }
+  },
+  "Header": {
+    "home": "Home",
+    "categories": "Categories",
+    "bookings": "Bookings",
+    "profile": "Profile",
+    "dashboard": "Dashboard",
+    "myServices": "My Services",
+    "searchPlaceholder": "Search",
+    "notifications": "Notifications"
+  },
+  "UserHome": {
+    "categories": "Categories",
+    "best-photographers": "Best photographers",
+    "years-experience": "Years of experience",
+    "show-profile": "Show Profile",
+    "show-more": "Show more",
+    "story": "Story",
+    "all-stories": "All Stories",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "Stories": {
+    "close": "Close",
+    "next-story": "Next story",
+    "previous-story": "Previous story"
+  },
+  "Footer": {
+    "what-looking": "What are you looking for?",
+    "search": "Search",
+    "imortant": "Important links",
+    "customer-service": "Customers Service",
+    "download-app": "Download the Tasweerah app now",
+    "app-available": "Available on all devices to make managing catering easier anytime, anywhere.",
+    "contact-now": "Contact us now",
+    "submit-complaint": "Submit a complaint",
+    "contact": "Contact Us",
+    "policy": "Privacy Policy",
+    "terms": "Terms and Conditions"
+  },
+  "Bookings": {
+    "orders": "Orders",
+    "waiting": "Waiting",
+    "completed": "Ended",
+    "cancelled": "Cancelled",
+    "date-time": "Date & Time",
+    "price": "Price",
+    "session-details": "Session details",
+    "booking-info": "Booking info",
+    "booking-details": "Booking details",
+    "order-id": "Order ID",
+    "booking-date": "Booking date",
+    "booking-time": "Booking time",
+    "duration": "Duration",
+    "minutes": "Minutes",
+    "pay-details": "Payment details",
+    "pay-method": "Payment method",
+    "total": "Total",
+    "photographer-info": "Photographer info",
+    "cancel-booking": "Cancel booking",
+    "back": "Back",
+    "no-orders": "You have no orders!",
+    "back-description": "Browse the Homepage and choose the service that suits you or that you need, dear user, to view your orders.",
+    "go-home": "Go to Homepage"
+  },
+  "ArtistHome": {
+    "story": "Story",
+    "show-more": "Show more",
+    "you": "You",
+    "upload-story": "Upload Story",
+    "upload-story-description": "Select an image or video to share as a story",
+    "upload": "Upload",
+    "loading": "Loading...",
+    "previous": "Previous",
+    "next": "Next",
+    "welcome-greeting": "Hello {name}",
+    "add-skills": "Add your skills",
+    "select-skills": "Select your skills",
+    "save": "Save",
+    "monthly": "Monthly",
+    "check-achievements": "Let's check your financial achievements",
+    "orders-completed-today": "Orders completed today",
+    "photography-inputs": "Photography inputs"
+  },
+  "MyServices": {
+    "all-services": "All Services",
+    "add-another-service": "Add another service",
+    "view-service": "View Service",
+    "delete-service": "Delete Service",
+    "request": "request",
+    "currency": "E.L.",
+    "add-new-service": "Add New Service",
+    "service-name": "Service Name",
+    "service-name-placeholder": "Enter service name",
+    "service-price": "Service Price",
+    "service-price-placeholder": "Enter service price",
+    "service-notes": "Service Notes",
+    "service-notes-placeholder": "Enter service notes.......",
+    "add-service-image": "Add service image",
+    "attach-file": "Attach file",
+    "save": "Save",
+    "service-details": "Service Details",
+    "service-requests": "Service Requests",
+    "service-chats": "Service Chats",
+    "edit-service": "Edit Service",
+    "update": "Update",
+    "booking-date": "Booking Appointment Date",
+    "request-date-time": "Request Date and Time",
+    "no-bookings": "No bookings",
+    "no-chats": "No chats"
+  }
+}

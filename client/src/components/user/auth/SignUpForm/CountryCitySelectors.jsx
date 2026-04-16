@@ -23,7 +23,7 @@ export default function CountryCitySelectors({
 }) {
   const t = useTranslations("Auth.Signup");
   const locale = useLocale();
-
+console.log("CountryCitySelectors render - countries:", countries);
   return (
     <>
       {/* Country */}

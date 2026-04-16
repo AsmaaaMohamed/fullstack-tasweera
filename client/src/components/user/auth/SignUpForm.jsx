@@ -33,7 +33,7 @@ export default function SignUpForm() {
     loading,
     error,
   } = useSignUpForm();
-
+console.log("SignUpForm render - formData:", countries);
   return (
     <div className="w-full">
       {/* Logo */}

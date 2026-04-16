@@ -34,13 +34,13 @@ export function useSignUpForm() {
   const [phoneCountryCode, setPhoneCountryCode] = useState("+966"); // Default to saudi Arabia
 
   // Load cities when country changes
-  const loadCities = async (countryId) => {
-    if (!countryId) return;
+  const loadCities = async (countryCode) => {
+    if (!countryCode) return;
 
     setCitiesLoading(true);
     setSelectedCity(""); // Reset city selection
     try {
-      const fetchedCities = await fetchCities(countryId);
+      const fetchedCities = await fetchCities(countryCode);
       setCities(fetchedCities);
     } catch (error) {
       console.error("Error loading cities:", error);
@@ -65,8 +65,8 @@ export function useSignUpForm() {
           const countryData = getMiddleEastCountryByName(defaultCountry.name);
           setPhoneCountryCode(countryData?.dial || "+966");
           // Load cities for default country
-          if (defaultCountry.id) {
-            loadCities(defaultCountry.id);
+          if (defaultCountry.code) {
+            loadCities(defaultCountry.code);
           }
         } else {
           console.warn("No countries fetched from API");
@@ -92,7 +92,7 @@ export function useSignUpForm() {
       // Get dial code from middleEastCountries by country name
       const countryData = getMiddleEastCountryByName(country.name);
       setPhoneCountryCode(countryData?.dial || "+20");
-      loadCities(country.id);
+      loadCities(country.code);
       // Clear city error if any
       if (formErrors.city) {
         setFormErrors({ ...formErrors, city: undefined });

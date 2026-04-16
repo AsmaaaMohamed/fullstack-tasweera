@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 // ROUTES
 app.use('/api/location', locationRouter);
-
+app.use('/api/auth', authRouter);
 app.all('/*splat', (req, res, next) => {
     next(new AppError(`This route ${req.originalUrl} is not yet defined!`, 404));
 });

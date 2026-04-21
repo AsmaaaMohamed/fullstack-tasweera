@@ -41,6 +41,20 @@ const validateStoryPayload = payload => {
   return errors;
 };
 
+const mapStoryWithArtist = (story, artist) => ({
+  id: String(story._id),
+  media_url: story.media_url,
+  type: story.type,
+  caption: story.caption || '',
+  expires_at: new Date(story.expires_at).toISOString(),
+  created_at: new Date(story.created_at).toISOString(),
+  updated_at: new Date(story.updated_at).toISOString(),
+  views_count: story.views_count || 0,
+  artist_id: String(story.artist),
+  artist_name: artist?.name || 'Artist',
+  artist_profile: artist?.profile_picture_url || null,
+});
+
 const mapStory = story => ({
   id: String(story._id),
   media_url: story.media_url,
@@ -53,12 +67,35 @@ const mapStory = story => ({
 });
 
 exports.getMyStories = catchAsync(async (req, res) => {
-  const stories = await Story.find({ artist: req.user._id }).sort({ created_at: -1 });
+  const page = parseInt(req.query.page) || 1;
+  const perPage = parseInt(req.query.per_page) || 10;
+  const skip = (page - 1) * perPage;
+
+  // Get artist info
+  const artist = await User.findById(req.user._id).select('name profile_picture_url');
+
+  // Get total count for pagination
+  const total = await Story.countDocuments({ artist: req.user._id });
+  const lastPage = Math.max(1, Math.ceil(total / perPage));
+
+  // Get paginated stories
+  const stories = await Story.find({ artist: req.user._id })
+    .sort({ created_at: -1 })
+    .skip(skip)
+    .limit(perPage)
+    .lean();
+
+  // Format stories for the response
+  const formattedStories = stories.map(story => mapStoryWithArtist(story, artist));
 
   res.status(200).json({
     status: 'success',
-    data: {
-      stories: stories.map(mapStory),
+    data: formattedStories,
+    pagination: {
+      current_page: page,
+      last_page: lastPage,
+      per_page: perPage,
+      total,
     },
   });
 });

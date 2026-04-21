@@ -1,9 +1,25 @@
 // src/lib/stories.js
 import api from "../lib/api";
 
-// Fetch stories for artists
-export async function fetchArtistStories({ page = 1, perPage = 10 } = {}) {
+// Fetch stories for customers (all artists' active stories)
+export async function fetchStories({ page = 1, perPage = 10 } = {}) {
   const { data } = await api.get(`/customer/stories`, {
+    params: { page, per_page: perPage },
+  });
+
+  return data?.data || {
+    stories: [],
+    pagination: {
+      current_page: page,
+      last_page: 1,
+      per_page: perPage,
+    },
+  };
+}
+
+// Fetch stories for the logged-in artist (their own stories)
+export async function fetchArtistStories({ page = 1, perPage = 10 } = {}) {
+  const { data } = await api.get(`/artist/stories`, {
     params: { page, per_page: perPage },
   });
 
@@ -21,15 +37,11 @@ export async function fetchArtistStories({ page = 1, perPage = 10 } = {}) {
     };
   }
 
-  // Group all stories by artist (in this case, all stories are from the logged-in artist)
-  // Get the first story to extract artist info
+  // Get artist info from first story
   const firstStory = storiesArray[0];
   const artistName = firstStory.artist_name || "Artist";
   const artistProfile = firstStory.artist_profile || null;
-
-  // Create a consistent artist_id from artist_name (since all stories are from the same artist)
-  // Using a simple hash of the artist_name to create a consistent ID
-  const artistId = `artist_${artistName.toLowerCase().replace(/\s+/g, "_")}`;
+  const artistId = firstStory.artist_id || `artist_${artistName.toLowerCase().replace(/\s+/g, "_")}`;
 
   // Transform stories to match the expected format
   const transformedStories = storiesArray.map((story) => ({
@@ -39,7 +51,7 @@ export async function fetchArtistStories({ page = 1, perPage = 10 } = {}) {
     expires_at: story.expires_at,
     created_at: story.created_at,
     views_count: story.views_count,
-    is_viewed: false, // Default to false, can be updated based on views_count if needed
+    is_viewed: false,
   }));
 
   return {
@@ -54,13 +66,13 @@ export async function fetchArtistStories({ page = 1, perPage = 10 } = {}) {
     ],
     pagination: {
       current_page: page,
-      last_page: 1, // API doesn't return pagination info, defaulting to 1
+      last_page: 1,
       per_page: perPage,
     },
   };
 }
 
-// Upload story for artists
+// Upload story for artists (only artists can upload)
 export async function uploadArtistStory(file) {
   const formData = new FormData();
   formData.append("media", file);

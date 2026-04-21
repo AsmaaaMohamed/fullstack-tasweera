@@ -3,11 +3,9 @@ import { useLocale } from "next-intl";
 import Image from "next/image";
 import PrimaryInput from "@/components/shared/PrimaryInput";
 import PrimaryButton from "@/components/shared/PrimaryButton";
-import {  useRef, useState } from "react";
+import { useRef, useState } from "react";
 import api from "@/lib/api";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 
 export default function UserProfilePage({ initialUserData }) {
   const locale = useLocale();
@@ -20,18 +18,7 @@ export default function UserProfilePage({ initialUserData }) {
   );
   const [country, setCountry] = useState(initialUserData.country);
   const [phoneNumber, setPhoneNumber] = useState(initialUserData.localNumber);
-  
-  // OTP Verification State
-  const [showOtpModal, setShowOtpModal] = useState(false);
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [verificationToken, setVerificationToken] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [pendingChanges, setPendingChanges] = useState({
-    email: null,
-    phone: null,
-    country: null,
-    profile_picture: null
-  });
+
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -67,54 +54,6 @@ export default function UserProfilePage({ initialUserData }) {
       [name]: value,
     }));
   };
-  // Check if sensitive data (email/phone) is being changed
-  const isSensitiveChange = (currentData, newData) => {
-    return (
-      currentData.email !== newData.email ||
-      `${currentData.country?.dial}${currentData.localNumber}` !== `${newData.country?.dial}${newData.phoneNumber}`
-    );
-  };
-
-  // Handle OTP input change
-  const handleOtpChange = (element, index) => {
-    if (isNaN(element.value)) return false;
-    
-    const newOtp = [...otp];
-    newOtp[index] = element.value;
-    setOtp(newOtp);
-    
-    // Focus next input
-    if (element.nextSibling && element.value !== '') {
-      element.nextSibling.focus();
-    }
-  };
-
-  // Handle OTP verification
-  const handleVerifyOtp = async () => {
-    try {
-      setIsVerifying(true);
-      const otpCode = otp.join('');
-      
-      const response = await api.post("profile/confirm-info-update", {
-        verify_token: verificationToken,
-        otp: otpCode
-      });
-
-      if (response.data.success) {
-        toast.success("Profile updated successfully");
-        setShowOtpModal(false);
-        setOtp(["", "", "", "", "", ""]);
-        setVerificationToken("");
-        // Optionally refresh user data
-        // await fetchUserData();
-      }
-    } catch (error) {
-      console.error("Error verifying OTP:", error);
-      toast.error(error.response?.data?.message || "Failed to verify OTP");
-    } finally {
-      setIsVerifying(false);
-    }
-  };
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -124,14 +63,11 @@ export default function UserProfilePage({ initialUserData }) {
     try {
       const formData = new FormData();
       const newPhoneNumber = `${country.dial}${phoneNumber}`;
-      const isEmailChanged = userData.email !== initialUserData.email;
-      const isPhoneChanged = newPhoneNumber !== `${initialUserData.country?.dial}${initialUserData.localNumber}`;
-      
+
       // Prepare form data
       formData.append("name", userData.name);
-      
-      if (isEmailChanged) formData.append("email", userData.email);
-      if (isPhoneChanged) formData.append("phone", newPhoneNumber);
+      formData.append("email", userData.email);
+      formData.append("phone", newPhoneNumber);
       
       // Handle profile picture
       const fileInput = fileInputRef.current;
@@ -143,28 +79,12 @@ export default function UserProfilePage({ initialUserData }) {
         formData.append("profile_picture", file, file.name);
       }
 
-      // If sensitive data is being changed, request OTP
-      if (isEmailChanged || isPhoneChanged) {
-        const response = await api.post("profile/update-info", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+      const response = await api.post("profile/update-info", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-        if (response.data.success && response.data.reset_token) {
-          setVerificationToken(response.data.reset_token);
-          setShowOtpModal(true);
-          toast.success(response.data.message || "Verification code sent");
-        }
-      } else {
-        // For non-sensitive changes, update directly
-        const response = await api.post("profile/update-info", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        if (response.data.success) {
-          toast.success("Profile updated successfully");
-          // Optionally refresh user data
-          // await fetchUserData();
-        }
+      if (response.data.success) {
+        toast.success(response.data.message || "Profile updated successfully");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -175,42 +95,6 @@ export default function UserProfilePage({ initialUserData }) {
   };
   return (
     <div className="w-full bg-background dark:bg-transparent">
-      {/* OTP Verification Modal */}
-      <Dialog open={showOtpModal} onOpenChange={setShowOtpModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Verify Your Identity</DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-              We've sent a verification code to your {userData.email ? 'email' : 'phone'}. Please enter it below.
-            </p>
-            <div className="flex justify-center space-x-2 mb-6">
-              {otp.map((data, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  maxLength={1}
-                  value={data}
-                  onChange={e => handleOtpChange(e.target, index)}
-                  onFocus={e => e.target.select()}
-                  className="w-12 h-12 text-center border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              ))}
-            </div>
-            <div className="flex justify-end">
-              <Button 
-                onClick={handleVerifyOtp}
-                disabled={isVerifying || otp.some(digit => !digit)}
-                className="w-full"
-              >
-                {isVerifying ? 'Verifying...' : 'Verify'}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex flex-col gap-6">
           {/* Main form */}

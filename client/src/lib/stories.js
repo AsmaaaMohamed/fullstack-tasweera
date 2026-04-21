@@ -1,16 +1,9 @@
 // src/lib/stories.js
 import api from "../lib/api";
 
-export async function fetchStories({ page = 1, perPage = 10 } = {}) {
-  const { data } = await api.get(`/customer/stories`, {
-    params: { page, per_page: perPage },
-  });
-  return data?.data; // { stories, pagination }
-}
-
 // Fetch stories for artists
 export async function fetchArtistStories({ page = 1, perPage = 10 } = {}) {
-  const { data } = await api.get(`/artist/stories`, {
+  const { data } = await api.get(`/customer/stories`, {
     params: { page, per_page: perPage },
   });
 

@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import RegistrationFormFields from "./SignUpForm/RegistrationFormFields";
-import OtpVerificationForm from "./SignUpForm/OtpVerificationForm";
 import { useArtistSignUpForm } from "@/hooks/useArtistSignUpForm";
 
 export default function SignUpForm() {
@@ -20,12 +19,6 @@ export default function SignUpForm() {
     citiesLoading,
     handleCountrySelection,
     handleCityChange,
-    registrationPhone,
-    showOtpInput,
-    otp,
-    handleOtpChange,
-    handleOtpSubmit,
-    handleBackToForm,
     handleSubmit,
     formErrors,
     loading,
@@ -39,7 +32,6 @@ export default function SignUpForm() {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      {/* Error message */}
       {error && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
           <p className="text-sm font-semibold mb-1">{error}</p>
@@ -55,59 +47,37 @@ export default function SignUpForm() {
         </div>
       )}
 
-      {/* Show general error if exists */}
       {formErrors._general && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
           <p className="text-sm font-semibold">{formErrors._general}</p>
         </div>
       )}
 
-      {/* Registration Form */}
-      {!showOtpInput && (
-        <>
-          <RegistrationFormFields
-            formData={formData}
-            onInputChange={handleInputChange}
-            countries={countries}
-            cities={cities}
-            selectedCountry={selectedCountry}
-            selectedCity={selectedCity}
-            countriesLoading={countriesLoading}
-            citiesLoading={citiesLoading}
-            onCountryChange={handleCountrySelection}
-            onCityChange={handleCityChange}
-            formErrors={formErrors}
-            onSubmit={handleStep1Submit}
-            loading={loading}
-          />
+      <RegistrationFormFields
+        formData={formData}
+        onInputChange={handleInputChange}
+        countries={countries}
+        cities={cities}
+        selectedCountry={selectedCountry}
+        selectedCity={selectedCity}
+        countriesLoading={countriesLoading}
+        citiesLoading={citiesLoading}
+        onCountryChange={handleCountrySelection}
+        onCityChange={handleCityChange}
+        formErrors={formErrors}
+        onSubmit={handleStep1Submit}
+        loading={loading}
+      />
 
-          {/* Sign in link */}
-          <div className="text-center mt-6">
-            <span className="text-gray-600 dark:text-gray-300!">
-              {t("haveAccount")}{" "}
-            </span>
-            <Link
-              href="/artist/signin"
-              className="text-orange-500 hover:text-orange-600 font-medium dark:text-orange-500 dark:hover:text-orange-600"
-            >
-              {t("signin")}
-            </Link>
-          </div>
-        </>
-      )}
-
-      {/* OTP Verification (shown after form submission) */}
-      {showOtpInput && (
-        <OtpVerificationForm
-          registrationPhone={registrationPhone}
-          otp={otp}
-          onOtpChange={handleOtpChange}
-          onSubmit={handleOtpSubmit}
-          onBack={handleBackToForm}
-          loading={loading}
-          formErrors={formErrors}
-        />
-      )}
+      <div className="text-center mt-6">
+        <span className="text-gray-600 dark:text-gray-300!">{t("haveAccount")} </span>
+        <Link
+          href="/artist/signin"
+          className="text-orange-500 hover:text-orange-600 font-medium dark:text-orange-500 dark:hover:text-orange-600"
+        >
+          {t("signin")}
+        </Link>
+      </div>
     </div>
   );
 }

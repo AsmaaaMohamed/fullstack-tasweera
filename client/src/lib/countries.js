@@ -8,7 +8,7 @@ export const fetchCountries = async () => {
     const countries = Array.isArray(response.data)
       ? response.data
       : response.data?.data || response.data || [];
-    console.log("Fetched countries:", countries);
+    // console.log("Fetched countries:", countries);
     return countries;
   } catch (error) {
     console.error("Error fetching countries:", error);

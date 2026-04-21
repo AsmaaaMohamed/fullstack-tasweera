@@ -1,8 +1,8 @@
 import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig = {
-    images: {
-    domains: ["flagcdn.com","taswera.computinggate.com"],
+  images: {
+    domains: ["flagcdn.com", "taswera.computinggate.com", "images.unsplash.com"],
   },
 };
 

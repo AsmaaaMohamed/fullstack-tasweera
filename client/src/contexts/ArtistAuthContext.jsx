@@ -70,7 +70,7 @@ export const ArtistAuthProvider = ({ children }) => {
         setError(null);
 
         try {
-            const response = await api.post("/artist/register", artistData);
+            const response = await api.post("/auth/artist/register", artistData);
 
             if (response.data.success) {
                 toast.success("Registration successful!");
@@ -132,7 +132,7 @@ export const ArtistAuthProvider = ({ children }) => {
         setError(null);
 
         try {
-            const response = await api.post(`/artist/login?lang=${locale}`, {
+            const response = await api.post(`/auth/artist/login?lang=${locale}`, {
                 email,
                 password,
             });
@@ -199,79 +199,6 @@ export const ArtistAuthProvider = ({ children }) => {
             setLoading(false);
         }
     };
-
-
-
-    // Verify OTP
-    const verifyOtp = async (phone, otp, action = "register") => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            const response = await api.post(`/common/verify-otp?action=${action}`, {
-                phone,
-                otp,
-            });
-
-            if (response.data.success) {
-                toast.success("OTP verified successfully!");
-
-                // For reset_password action, return the reset_token
-                if (action === "reset_password") {
-                    return {
-                        success: true,
-                        reset_token: response.data.reset_token,
-                        message: response.data.message,
-                    };
-                }
-                const artistData = response.data.user;
-                const authToken = response.data.token;
-                const userType = response.data.user_type;
-
-                // Update user and token
-                setUser(artistData);
-                setToken(authToken);
-                setIsAuthenticated(true);
-
-                // Store in  and set cookie via server API
-                if (typeof window !== "undefined") {
-                    Cookies.set("auth_token", authToken, COOKIE_OPTIONS);
-                    Cookies.set("auth_user", JSON.stringify(artistData), COOKIE_OPTIONS);
-                    if (userType) {
-                        Cookies.set("user_type", userType, COOKIE_OPTIONS);
-                    }
-                    // Set default authorization header
-                    api.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
-                }
-
-                return {
-                    success: true,
-                    message: response.data.message,
-                    user: artistData,
-                    token: authToken,
-                };
-            } else {
-                toast.error(response.data.message || "OTP verification failed");
-                throw new Error(response.data.message || "OTP verification failed");
-            }
-        } catch (error) {
-            const errorMessage =
-                error.response?.data?.message ||
-                error.response?.data?.error ||
-                error.message ||
-                "OTP verification failed. Please try again.";
-            toast.error(errorMessage);
-            setError(errorMessage);
-            return {
-                success: false,
-                message: errorMessage,
-                errors: error.response?.data?.errors,
-            };
-        } finally {
-            setLoading(false);
-        }
-    };
-
     // Logout function
     const logout = async () => {
         setUser(null);
@@ -341,7 +268,6 @@ export const ArtistAuthProvider = ({ children }) => {
         isAuthenticated,
         register,
         loginWithEmail,
-        verifyOtp,
         logout,
         clearError,
         updateArtistRoleAndSections,

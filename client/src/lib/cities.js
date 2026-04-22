@@ -1,16 +1,15 @@
 import api from "./api";
 
 // Fetch cities from API by country ID
-export const fetchCities = async (countryCode) => {
-  if (!countryCode) return [];
+export const fetchCities = async (countryId) => {
+  if (!countryId) return [];
 
   try {
-    const queryKey = Number.isNaN(Number(countryCode)) ? "country_code" : "country_id";
-    const response = await api.get(`/location/cities?${queryKey}=${countryCode}`);
-    return response.data.data || [];
+    const response = await api.get(`/cities?country_id=${countryId}`);
+    return response.data || [];
   } catch (error) {
-      console.error("Error fetching cities:", error);
-      return [];
+    console.error("Error fetching cities:", error);
+    return [];
   }
 };
 

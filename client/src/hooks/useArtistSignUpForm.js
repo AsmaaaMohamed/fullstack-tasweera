@@ -11,7 +11,7 @@ import { parseRegistrationErrors } from "@/lib/errorParser";
 export function useArtistSignUpForm() {
     const locale = useLocale();
     const router = useRouter();
-    const { register, loading, error, clearError } = useArtistAuth();
+    const { register, verifyOtp, loading, error, clearError } = useArtistAuth();
 
     const [formData, setFormData] = useState({
         name: "",
@@ -28,7 +28,10 @@ export function useArtistSignUpForm() {
     const [selectedCity, setSelectedCity] = useState("");
     const [countriesLoading, setCountriesLoading] = useState(true);
     const [citiesLoading, setCitiesLoading] = useState(false);
+    const [showOtpInput, setShowOtpInput] = useState(false);
+    const [otp, setOtp] = useState("");
     const [formErrors, setFormErrors] = useState({});
+    const [registrationPhone, setRegistrationPhone] = useState("");
     const [phoneCountryCode, setPhoneCountryCode] = useState("+966"); // Default to Saudi Arabia
 
     // Load cities when country changes
@@ -208,7 +211,10 @@ export function useArtistSignUpForm() {
         const result = await register(registrationData);
 
         if (result.success) {
-            router.push("/artist/complete");
+            // Store phone for OTP verification (use the formatted phone number)
+            setRegistrationPhone(fullPhoneNumber);
+            // Show OTP input
+            setShowOtpInput(true);
         } else {
             // Log the error for debugging
             console.error("Artist Registration error:", result);
@@ -224,6 +230,25 @@ export function useArtistSignUpForm() {
                 // If no field-specific errors, show general error
                 console.error("No field-specific errors found in response");
             }
+        }
+    };
+
+    const handleOtpSubmit = async (e) => {
+        e.preventDefault();
+        clearError();
+
+        if (!otp.trim()) {
+            setFormErrors({
+                otp: locale === "ar" ? "رمز التحقق مطلوب" : "OTP is required",
+            });
+            return;
+        }
+
+        const result = await verifyOtp(registrationPhone, otp.trim(), "register");
+
+        if (result.success) {
+            // Redirect to complete profile page after successful OTP verification
+            router.push("/artist/complete");
         }
     };
 
@@ -248,6 +273,20 @@ export function useArtistSignUpForm() {
         }
     };
 
+    const handleOtpChange = (e) => {
+        const value = e.target ? e.target.value : e;
+        setOtp(value);
+        if (formErrors.otp) {
+            setFormErrors({ ...formErrors, otp: undefined });
+        }
+    };
+
+    const handleBackToForm = () => {
+        setShowOtpInput(false);
+        setOtp("");
+        clearError();
+    };
+
     return {
         // Form data
         formData,
@@ -267,6 +306,14 @@ export function useArtistSignUpForm() {
 
         // Phone
         phoneCountryCode,
+
+        // OTP
+        showOtpInput,
+        otp,
+        registrationPhone,
+        handleOtpChange,
+        handleOtpSubmit,
+        handleBackToForm,
 
         // Form submission
         handleSubmit,

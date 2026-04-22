@@ -3,12 +3,11 @@ import api from "./api";
 // Fetch countries from API
 export const fetchCountries = async () => {
   try {
-    const response = await api.get("/location/countries");
+    const response = await api.get("/countries");
     // Handle both array response and object with data property
     const countries = Array.isArray(response.data)
       ? response.data
       : response.data?.data || response.data || [];
-    // console.log("Fetched countries:", countries);
     return countries;
   } catch (error) {
     console.error("Error fetching countries:", error);

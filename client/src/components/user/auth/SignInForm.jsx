@@ -7,6 +7,7 @@ import PrimaryButton from "@/components/shared/PrimaryButton";
 import PrimaryInput from "@/components/shared/PrimaryInput";
 import Image from "next/image";
 import { useSignInForm } from "@/hooks/useSignInForm";
+import OtpVerificationForm from "./SignUpForm/OtpVerificationForm";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 
@@ -18,14 +19,25 @@ export default function SignInForm() {
   const searchParams = useSearchParams();
 
   const {
+    loginMethod,
+    setLoginMethod,
     formData,
     handleInputChange,
+    phoneCountryCode,
+    handleCountryChange,
+    showOtpInput,
+    otp,
+    loginPhone,
+    handleOtpChange,
+    handleOtpSubmit,
+    handleBackToForm,
     handleSubmit,
     formErrors,
     loading,
     error,
   } = useSignInForm({
     onSuccess: () => {
+      // After successful login, redirect to returnUrl if present
       const returnUrl = searchParams.get("returnUrl");
       if (returnUrl) {
         router.replace(returnUrl);
@@ -37,9 +49,19 @@ export default function SignInForm() {
 
   return (
     <div className="w-full">
+      {/* Logo */}
       <div className={`${locale === "en" ? "text-left" : "text-right"} mb-8`}>
-        <div className={`${locale === "ar" ? "justify-start" : "justify-end"} flex items-center gap-2 mb-2 lg:-translate-y-12 lg:translate-x-12`}>
-          <Image src="/logo.svg" alt="Logo" width={130} height={57} className="dark:hidden" />
+        <div
+          className={`${locale === "ar" ? "justify-start" : "justify-end"
+            } flex items-center gap-2 mb-2 lg:-translate-y-12 lg:translate-x-12`}
+        >
+          <Image
+            src="/logo.svg"
+            alt="Logo"
+            width={130}
+            height={57}
+            className="dark:hidden"
+          />
           <Image
             src="/white-logo.svg"
             alt="Logo"
@@ -50,22 +72,33 @@ export default function SignInForm() {
         </div>
       </div>
 
+      {/* Title */}
       <h3 className="text-2xl font-bold text-center mb-4">{t("title")}</h3>
-      <p className="text-center text-gray-600 dark:text-gray-300 mb-8">{t("welcome")}</p>
 
+      {/* Welcome message */}
+      <p className="text-center text-gray-600 dark:text-gray-300 mb-8">
+        {t("welcome")}
+      </p>
+
+      {/* Success message for password reset */}
       {searchParams.get("reset") === "success" && (
         <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
-          <p className="text-sm font-semibold">Password reset successfully! You can now sign in.</p>
+          <p className="text-sm font-semibold">
+            {locale === "ar"
+              ? "تم إعادة تعيين كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول."
+              : "Password reset successfully! You can now sign in."}
+          </p>
         </div>
       )}
 
+      {/* Error message */}
       {error && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
           <p className="text-sm font-semibold mb-1">{error}</p>
           {Object.keys(formErrors).length > 0 && (
             <ul className="text-xs list-disc list-inside mt-2">
               {Object.entries(formErrors)
-                .filter(([field]) => field !== "_general")
+                .filter(([field]) => field !== "_general" && field !== "otp")
                 .map(([field, message]) => (
                   <li key={field}>{message}</li>
                 ))}
@@ -74,75 +107,190 @@ export default function SignInForm() {
         </div>
       )}
 
+      {/* Show general error if exists */}
       {formErrors._general && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
           <p className="text-sm font-semibold">{formErrors._general}</p>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <PrimaryInput
-          type="email"
-          name="email"
-          placeholder={t("email")}
-          value={formData.email}
-          onChange={handleInputChange}
-          icon={<Image src="/auth/icons/email.svg" alt="Email" width={24} height={24} />}
-          required
+      {/* OTP Verification Form or Login Form */}
+      {showOtpInput ? (
+        <OtpVerificationForm
+          registrationPhone={loginPhone}
+          otp={otp}
+          onOtpChange={handleOtpChange}
+          onSubmit={handleOtpSubmit}
+          onBack={handleBackToForm}
+          formErrors={formErrors}
+          loading={loading}
         />
-        {formErrors.email && <p className="text-sm text-red-600">{formErrors.email}</p>}
-
-        <PrimaryInput
-          type={showPassword ? "text" : "password"}
-          name="password"
-          placeholder={t("password")}
-          value={formData.password}
-          onChange={handleInputChange}
-          icon={<Image src="/auth/icons/lock.svg" alt="Lock" width={24} height={24} />}
-          leftContent={
-            <button
+      ) : (
+        <>
+          {/* Login method selector */}
+          <div className="flex gap-2 mb-6">
+            <PrimaryButton
               type="button"
-              className="text-gray-400 hover:text-gray-600"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => setLoginMethod("email")}
+              className={`flex-1 py-6 px-4 transition-colors text-md ${loginMethod === "email"
+                  ? "bg-[#E6A525] text-white"
+                  : "bg-white text-black border"
+                } hover:bg-[#E6A525]/50 hover:text-white`}
             >
-              <Image src="/auth/icons/eye.svg" alt="Eye" width={24} height={24} />
-            </button>
-          }
-          required
-        />
-        {formErrors.password && <p className="text-sm text-red-600">{formErrors.password}</p>}
+              {t("email")}
+            </PrimaryButton>
+            <PrimaryButton
+              type="button"
+              onClick={() => setLoginMethod("phone")}
+              className={`flex-1 py-6 px-4 text-md transition-colors ${loginMethod === "phone"
+                  ? "bg-[#E6A525] text-white"
+                  : "bg-white text-black"
+                } hover:bg-[#E6A525]/50 hover:text-white`}
+            >
+              {t("phone")}
+            </PrimaryButton>
+          </div>
 
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="remember"
-            id="remember"
-            checked={formData.remember}
-            onChange={handleInputChange}
-            className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-          />
-          <label htmlFor="remember" className="text-sm text-gray-600 dark:text-gray-300 cursor-pointer">
-            Remember me
-          </label>
-        </div>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {loginMethod === "email" ? (
+              <>
+                <PrimaryInput
+                  type="email"
+                  name="email"
+                  placeholder={t("email")}
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  icon={
+                    <Image
+                      src="/auth/icons/email.svg"
+                      alt="Email"
+                      width={24}
+                      height={24}
+                    />
+                  }
+                  required
+                />
+                {formErrors.email && (
+                  <p className="text-sm text-red-600">{formErrors.email}</p>
+                )}
 
-        <div className="text-right">
-          <Link href="/forgot-password" className="text-orange-500 hover:text-orange-600 text-sm">
-            {t("forgot")}
+                <PrimaryInput
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder={t("password")}
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  icon={
+                    <Image
+                      src="/auth/icons/lock.svg"
+                      alt="Lock"
+                      width={24}
+                      height={24}
+                    />
+                  }
+                  leftContent={
+                    <button
+                      type="button"
+                      className="text-gray-400 hover:text-gray-600"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      <Image
+                        src="/auth/icons/eye.svg"
+                        alt="Eye"
+                        width={24}
+                        height={24}
+                      />
+                    </button>
+                  }
+                  required
+                />
+                {formErrors.password && (
+                  <p className="text-sm text-red-600">{formErrors.password}</p>
+                )}
+
+                {/* Remember me checkbox */}
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="remember"
+                    id="remember"
+                    checked={formData.remember}
+                    onChange={handleInputChange}
+                    className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                  />
+                  <label
+                    htmlFor="remember"
+                    className="text-sm text-gray-600 dark:text-gray-300 cursor-pointer"
+                  >
+                    {locale === "ar" ? "تذكرني" : "Remember me"}
+                  </label>
+                </div>
+
+                {/* Forgot password */}
+                <div className="text-right">
+                  <Link
+                    href="/forgot-password"
+                    className="text-orange-500 hover:text-orange-600 text-sm"
+                  >
+                    {t("forgot")}
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <PrimaryInput
+                type="tel"
+                name="phone"
+                placeholder={t("phone")}
+                value={formData.phone}
+                onChange={handleInputChange}
+                icon={
+                  <Image
+                    src="/auth/icons/phone.svg"
+                    alt="Phone"
+                    width={24}
+                    height={24}
+                  />
+                }
+                isPhone
+                onCountryChange={handleCountryChange}
+                dir={locale === "ar" ? "rtl" : "ltr"}
+                required
+              />
+            )}
+            {formErrors.phone && (
+              <p className="text-sm text-red-600">{formErrors.phone}</p>
+            )}
+
+            {/* Sign in button */}
+            <PrimaryButton
+              className="text-md py-6"
+              type="submit"
+              fullWidth
+              disabled={loading}
+            >
+              {loading
+                ? locale === "ar"
+                  ? "جاري تسجيل الدخول..."
+                  : "Signing in..."
+                : t("submit")}
+            </PrimaryButton>
+          </form>
+        </>
+      )}
+
+      {/* Sign up link */}
+      {!showOtpInput && (
+        <div className="text-center mt-6">
+          <span className="text-gray-300">{t("noAccount")} </span>
+          <Link
+            href="/signup"
+            className="text-gray-800 hover:text-gray-300 dark:text-gray-100 font-medium"
+          >
+            {t("signup")}
           </Link>
         </div>
-
-        <PrimaryButton className="text-md py-6" type="submit" fullWidth disabled={loading}>
-          {loading ? "Signing in..." : t("submit")}
-        </PrimaryButton>
-      </form>
-
-      <div className="text-center mt-6">
-        <span className="text-gray-300">{t("noAccount")} </span>
-        <Link href="/signup" className="text-gray-800 hover:text-gray-300 dark:text-gray-100 font-medium">
-          {t("signup")}
-        </Link>
-      </div>
+      )}
     </div>
   );
 }

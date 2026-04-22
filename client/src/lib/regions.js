@@ -5,8 +5,8 @@ export const fetchRegions = async (cityId) => {
     if (!cityId) return [];
 
     try {
-        const response = await api.get(`/location/regions?city_id=${cityId}`);
-        return response.data?.data || [];
+        const response = await api.get(`/regions?city_id=${cityId}`);
+        return response.data || [];
     } catch (error) {
         console.error("Error fetching regions:", error);
         return [];

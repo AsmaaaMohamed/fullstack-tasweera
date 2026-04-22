@@ -11,7 +11,7 @@ import { parseRegistrationErrors } from "@/lib/errorParser";
 export function useSignUpForm() {
   const locale = useLocale();
   const router = useRouter();
-  const { register, loading, error, clearError } = useAuth();
+  const { register, verifyOtp, loading, error, clearError } = useAuth();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -27,17 +27,20 @@ export function useSignUpForm() {
   const [selectedCity, setSelectedCity] = useState("");
   const [countriesLoading, setCountriesLoading] = useState(true);
   const [citiesLoading, setCitiesLoading] = useState(false);
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [otp, setOtp] = useState("");
   const [formErrors, setFormErrors] = useState({});
+  const [registrationPhone, setRegistrationPhone] = useState("");
   const [phoneCountryCode, setPhoneCountryCode] = useState("+966"); // Default to saudi Arabia
 
   // Load cities when country changes
-  const loadCities = async (countryCode) => {
-    if (!countryCode) return;
+  const loadCities = async (countryId) => {
+    if (!countryId) return;
 
     setCitiesLoading(true);
     setSelectedCity(""); // Reset city selection
     try {
-      const fetchedCities = await fetchCities(countryCode);
+      const fetchedCities = await fetchCities(countryId);
       setCities(fetchedCities);
     } catch (error) {
       console.error("Error loading cities:", error);
@@ -62,8 +65,8 @@ export function useSignUpForm() {
           const countryData = getMiddleEastCountryByName(defaultCountry.name);
           setPhoneCountryCode(countryData?.dial || "+966");
           // Load cities for default country
-          if (defaultCountry.code) {
-            loadCities(defaultCountry.code);
+          if (defaultCountry.id) {
+            loadCities(defaultCountry.id);
           }
         } else {
           console.warn("No countries fetched from API");
@@ -89,7 +92,7 @@ export function useSignUpForm() {
       // Get dial code from middleEastCountries by country name
       const countryData = getMiddleEastCountryByName(country.name);
       setPhoneCountryCode(countryData?.dial || "+20");
-      loadCities(country.code);
+      loadCities(country.id);
       // Clear city error if any
       if (formErrors.city) {
         setFormErrors({ ...formErrors, city: undefined });
@@ -194,7 +197,10 @@ export function useSignUpForm() {
     const result = await register(registrationData);
 
     if (result.success) {
-      router.push("/home");
+      // Store phone for OTP verification (use the formatted phone number)
+      setRegistrationPhone(fullPhoneNumber);
+      // Show OTP input
+      setShowOtpInput(true);
     } else {
       // Log the error for debugging
       console.error("Registration error:", result);
@@ -210,6 +216,25 @@ export function useSignUpForm() {
         // If no field-specific errors, show general error
         console.error("No field-specific errors found in response");
       }
+    }
+  };
+
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+    clearError();
+
+    if (!otp.trim()) {
+      setFormErrors({
+        otp: locale === "ar" ? "رمز التحقق مطلوب" : "OTP is required",
+      });
+      return;
+    }
+
+    const result = await verifyOtp(registrationPhone, otp.trim(), "register");
+
+    if (result.success) {
+      // Redirect to home page after successful registration and OTP verification
+      router.push("/home");
     }
   };
 
@@ -234,6 +259,20 @@ export function useSignUpForm() {
     }
   };
 
+  const handleOtpChange = (e) => {
+    const value = e.target ? e.target.value : e;
+    setOtp(value);
+    if (formErrors.otp) {
+      setFormErrors({ ...formErrors, otp: undefined });
+    }
+  };
+
+  const handleBackToForm = () => {
+    setShowOtpInput(false);
+    setOtp("");
+    clearError();
+  };
+
   return {
     // Form data
     formData,
@@ -252,13 +291,21 @@ export function useSignUpForm() {
     
     // Phone
     phoneCountryCode,
-
+    
+    // OTP
+    showOtpInput,
+    otp,
+    registrationPhone,
+    handleOtpChange,
+    handleOtpSubmit,
+    handleBackToForm,
+    
     // Form submission
     handleSubmit,
-
+    
     // Errors
     formErrors,
-
+    
     // Auth context
     loading,
     error,

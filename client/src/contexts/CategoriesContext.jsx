@@ -20,7 +20,7 @@ export const CategoriesProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [isFetched, setIsFetched] = useState(false);
   const locale = useLocale();
-
+console.log(locale)
   // Fetch categories from API
   const fetchCategories = async (force = false) => {
     // Skip if already fetched and not forcing refresh

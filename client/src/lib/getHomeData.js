@@ -1,6 +1,6 @@
 import api from "./api";
 
-export async function getHomeData(locale = 'ar') {
+export async function getHomeData(locale) {
   try {
     const res = await api.get(`/customer/home?lang=${locale}`);
 

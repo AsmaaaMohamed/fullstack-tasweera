@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 
 export default async function UserHomePage({ params }) {
   const { lang } = params;
+  console.log("Locale from params:", params);
   const cookieStore = await cookies();
   const { banners } = await getHomeDataAction(lang);
 
